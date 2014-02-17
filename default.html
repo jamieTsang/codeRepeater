@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="gb2312" />
+<title>多线路生成页</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script>!window.jQuery && document.write('<script src="/Static/Jscripts/jquery-min.js"><\/script>');</script>
+<script type="text/javascript" src="/subject/edit/codeRepeater/js/ZeroClipboard.min.js"></script>
+<script>   ZeroClipboard.setDefaults( { moviePath: 'js/ZeroClipboard.swf' } );  </script> 
+<script type="text/javascript" src="/subject/edit/codeRepeater/js/main.js"></script>
+<style type="text/css">
+body {
+	font-size: 13px;
+}
+h1 {
+	background: #00EBFF;
+	margin: 8px 0;
+}
+i, cite, em, var, address, dfn {
+	font-style: italic;
+}
+i {
+	font-size: 18px;
+}
+.lfColumn,.rgColumn{
+	float:left;
+	width:50%;
+}
+textarea{
+	width:98%;
+}
+.number{
+	width:40px;
+}
+</style>
+</head>
+<body>
+<h1>多线路生成页v1.0 <i>(请使用现代浏览器)</i>更新日期20131112</h1>
+<div class="lfColumn">
+	<p>线路源代码：(“{$}”代表双位数序号，例如01、02、03...)</p>
+	<textarea id="rawTop" rows="5"></textarea>
+	<p>&lt;!-- {line#0} --&gt;</p>
+	<textarea id="rawText" rows="13"></textarea>
+	<p>&lt;!-- {/line#0} --&gt;</p>
+	<textarea id="rawBot" rows="5"></textarea>
+	<div>
+		从
+		<input class="number" type="number" id="star" value="0"/>开始,到
+		<input class="number" type="number" id="end"/>结束。
+		{$}是否从01开始？<select id="dollarStar">
+			<option value="0" selected="selected">否</option>
+			<option value="1">是</option>
+		</select>
+		<button id="generate">执行</button>
+	</div>
+</div>
+<div class="rgColumn">
+	<p>结果：</p>
+	<textarea id="result" rows="30"></textarea>
+	<button id="copy" onclick="toClipboard()" data-clipboard-target="result">复制到粘贴板</button>
+</div>
+</body>
+</html>
