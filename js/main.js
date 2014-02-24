@@ -30,7 +30,7 @@ $(function () {
 			console.log(dollarStar);
 			for(i=0;i<(end-star+1);i++){
 				var num=dollarStar=='0'?(i+star+1):(i+1);
-				midText=midText.replace(/{\$}/g,(num>10?num:'0'+num));
+				midText=midText.replace(/{\$}/g,(num>9?num:'0'+num));
 				result+=topText+'<!-- {line#'+(star+i)+'} -->\n'+midText+'\n<!-- {/line#'+(star+i)+'} -->\n'+botText+'\n';
 				midText=$('#rawText').val();
 			}
