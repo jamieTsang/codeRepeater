@@ -1,4 +1,6 @@
-﻿<!DOCTYPE HTML>
+﻿<%@ Page Language="C#" ContentType="text/html" ResponseEncoding="UTF-8" Debug="true" %>
+<%@ Import Namespace="System" %>
+<!DOCTYPE HTML>
 <html>
 <head>
 <meta charset="UTF-8" />
@@ -61,6 +63,7 @@ textarea{
     <option value="codeRepeater">线路代码生成</option>
     <option value="timeSetting">基于服务器时间控制</option>
 </select>
+<i>现在服务器时间：<% Response.Write(DateTime.Now.ToString("F")); %></i>
 </h1>
 <div id="lfColumn" class="lfColumn">
 	
