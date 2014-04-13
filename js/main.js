@@ -1,5 +1,5 @@
 ﻿/*!
- * 修改价格javascript主程序 v1.0
+ * 修改价格javascript主程序 v2.1
  * 请在jQuery环境下执行
  *
  * Copyright GZL International Travel Sevice Ltd.
@@ -9,25 +9,32 @@
  */
 var search = (document.location.search.match(/codeMode=(\w+)/) || [null,"codeRepeater"])[1];
 //console.log(search);
-$('#codeSelect').change(function () {
-    var selected = $(this).children('option[selected=selected]').val();
-    document.location.search = 'codeMode='+ selected;
-})
+/*$('#codeSelect').change(function () {
+var selected = $(this).children('option[selected=selected]').val();
+document.location.search = 'codeMode='+ selected;
+})*/
 var codeRepeaterHTML=[
-'<p>线路源代码：(“{$}”代表双位数序号，例如01、02、03...)</p>',
+'<div class="alert alert-warning">线路源代码：(“{$}”代表双位数序号，例如01、02、03...)</div>',
 	'<textarea id="rawTop" rows="5"></textarea>',
 	'<p>&lt;!-- {line#0} --&gt;</p>',
 	'<textarea id="rawText" rows="13"></textarea>',
 	'<p>&lt;!-- {/line#0} --&gt;</p>',
 	'<textarea id="rawBot" rows="5"></textarea>',
+    '<div class="none_15"></div>',
 	'<div>',
 		'从<input class="number" type="number" id="star" value="0"/>开始,到',
 		'<input class="number" type="number" id="end" value="1"/>结束。',
-		'{$}是否从01开始？<select id="dollarStar">',
-			'<option value="0" selected="selected">否</option>',
-			'<option value="1">是</option>',
-		'</select>',
-		'<button id="generate">执行</button>',
+        '<div id="drop1" class="dropdown" style="display:inline-block;margin-right:15px;">',
+          '<a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">',
+            '{$}是否从01开始？(否)<span class="caret"></span>',
+            '</a>',
+          '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">',
+            '<li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:viod(0);" onClick="fnChangeDollarStarValue(0)">否</a></li>',
+            '<li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:viod(0);" onClick="fnChangeDollarStarValue(1)">是</a></li>',
+          '</ul>',
+        '</div>',
+        '<input id="dollarStar" type="hidden" value="0"/>',
+		'<button id="generate" class="btn btn-default">执行</button>',
         '</div>'
 ];
 var now = new Date();
@@ -45,34 +52,44 @@ TimeSetting.prototype.generateHTML = function () {
     //this.id
     var html = [
     '<div class="timeSettingCont timeCont">',
-    '<p>时间ID：'+this.id+'</p>',
+    '<p><span class="label label-primary">时间ID：' + this.id + '</span></p>',
     '<p><b>开抢时间：</b></p>',
-    '<div id="timeSetting_' + this.id + '" class="timeSetting"><input class="number4 number" type="number" id="year" value="' + now.getFullYear() + '" onChange="checkDateMax(' + this.id + ')"/>年',
+    '<div id="timeSetting_' + this.id + '" class="timeSetting"><p><input class="number4 number" type="number" id="year" value="' + now.getFullYear() + '" onChange="checkDateMax(' + this.id + ')"/>年',
     '<input class="number2 number" type="number" id="month" min="1" max="12" value="' + (now.getMonth() + 1) + '" onChange="checkDateMax(' + this.id + ')"/>月',
     '<input class="number2 number" type="number" id="date" min="1" max="' + setMaxDate(2014, 2) + '" value="' + now.getDate() + '"/>日',
     '<input class="number2 number" type="number" id="hour" min="0" max="23" value="0"/>时',
     '<input class="number2 number" type="number" id="minute" min="0" max="59" value="0"/>分',
-    '<input class="number2 number" type="number" id="second" min="0" max="59" value="0"/>秒',
-    '<p>请把作用标签的类名设置为:time' + this.id + ' 例:&lt;tag class="time' + this.id + '"&gt;准备开抢&lt;/tag&gt;</p>',
-    '<p>当时间到达时，作用标签会变为 例:&lt;tag class="time' + this.id + ' active"&gt;开抢时间！&lt;/tag&gt;</p>',
+    '<input class="number2 number" type="number" id="second" min="0" max="59" value="0"/>秒</p>',
+    '<div class="alert alert-warning">请把作用标签的类名设置为:time' + this.id + ' 例:&lt;tag class="time' + this.id + '"&gt;准备开抢&lt;/tag&gt;<br/>',
+    '当时间到达时，作用标签会变为 例:&lt;tag class="time' + this.id + ' active"&gt;开抢时间！&lt;/tag&gt;</div>',
     '</div>',
     '</div>'
     ];
     return html.join('');
 }
 var timeSettingHTML = [
-    '<p>请在jQuery环境下执行 code:&lt;script src="/Static/scripts/jquery-1.7.2.min.js" type="text/javascript"&gt;&lt;/script&gt;</p>',
+    '<div class="alert alert-danger">请在jQuery环境下执行 code:&lt;script src="/Static/scripts/jquery-1.7.2.min.js" type="text/javascript"&gt;&lt;/script&gt;</div>',
     new TimeSetting(0).generateHTML(),
     '<div class="timeCont"><a href="javascript:void(0);" onClick="addTimeSetting()">+添加一个时间点</a></div>',
-    '<button onClick="timeSetting(true)">生成代码(开发)</button>',
-    '<button onClick="timeSetting(false)">生成代码(压缩)</button>'
+    '<div class="btn-group">',
+    '<button class="btn btn-default" onClick="timeSetting(true)">生成代码(开发)</button>',
+    '<button class="btn btn-default" onClick="timeSetting(false)">生成代码(压缩)</button>',
+    '</div>'
 ];
 function addTimeSetting() {
     var timeSettingNum = $('.timeSetting').length;
     $('.timeSettingCont:last').after(new TimeSetting(timeSettingNum).generateHTML());
 }
+function fnChangeDollarStarValue(e) {
+    $('#dollarStar').val(e);
+    if (e)
+        $('#dLabel').text('{$}是否从01开始？(是)');
+    else
+        $('#dLabel').text('{$}是否从01开始？(否)');
+}
 function load() {
-    $('#codeSelect option[value=' + search + ']').attr('selected', true);
+    //$('#codeSelect option[value=' + search + ']').attr('selected', true);
+    $('.navbar-nav li[data-value=' + search + ']').addClass('active').siblings().removeClass('active');
     switch (search){
         case "codeRepeater":
             var codeCont = {
@@ -123,6 +140,7 @@ function codeRepeater(object) {
                 midText = $('#rawText').val();
             }
             $('#result').text(result);
+            excuteAlert();
         }
     });
 }
@@ -164,6 +182,7 @@ function timeSetting(isPress) {
             $.each(result, function (key, value) { result[key] = $.trim(value); });
             $('#result').text(comment+result.join(''));
         }
+        excuteAlert();
 }
 function toClipboard() {
     var clip = new ZeroClipboard($('#copy'));
@@ -180,4 +199,10 @@ function setMaxDate(year, month) {
 }
 function checkDateMax(n) {
     $('#timeSetting_' + n + ' #date').attr('max', setMaxDate($('#timeSetting_' + n + ' #year').val(), ($('#timeSetting_' + n + ' #month').val() - 1)));
+}
+
+function excuteAlert() {
+    $('#alert_tips').fadeIn(300);
+    clearTimeout(setSuccessTimeout);
+    var setSuccessTimeout = setTimeout('$("#alert_tips").fadeOut(300)', 5000);
 }
